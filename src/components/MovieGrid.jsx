@@ -3,9 +3,13 @@ import { Star } from 'lucide-react';
 
 const API_BASE = import.meta.env.VITE_BACKEND_URL || (window?.location?.origin?.replace(':3000', ':8000')) || '';
 
-function MovieCard({ movie }) {
+function MovieCard({ movie, onClick }) {
   return (
-    <div className="group relative overflow-hidden rounded-xl border border-white/10 bg-neutral-900/60">
+    <button
+      type="button"
+      onClick={onClick}
+      className="group relative overflow-hidden rounded-xl border border-white/10 bg-neutral-900/60 text-left focus:outline-none focus:ring-2 focus:ring-rose-500/50"
+    >
       {movie.poster ? (
         <img
           src={movie.poster}
@@ -28,11 +32,11 @@ function MovieCard({ movie }) {
           <p className="text-xs text-neutral-400">{Array.isArray(movie.genres) ? movie.genres.join(', ') : movie.genres}</p>
         ) : null}
       </div>
-    </div>
+    </button>
   );
 }
 
-export default function MovieGrid({ filters }) {
+export default function MovieGrid({ filters, onSelect }) {
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -101,7 +105,7 @@ export default function MovieGrid({ filters }) {
       ) : (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
           {filtered.map((movie) => (
-            <MovieCard key={`${movie.media_type || 'movie'}-${movie.id}`} movie={movie} />
+            <MovieCard key={`${movie.media_type || 'movie'}-${movie.id}`} movie={movie} onClick={() => onSelect?.(movie.id)} />
           ))}
         </div>
       )}

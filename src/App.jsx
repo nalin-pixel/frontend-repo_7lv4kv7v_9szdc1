@@ -3,13 +3,14 @@ import Header from './components/Header.jsx';
 import Hero from './components/Hero.jsx';
 import Filters from './components/Filters.jsx';
 import MovieGrid from './components/MovieGrid.jsx';
+import MovieModal from './components/MovieModal.jsx';
 
 export default function App() {
   const [query, setQuery] = useState('');
   const [activeTag, setActiveTag] = useState('Trending');
   const [activeYear, setActiveYear] = useState('All');
+  const [selectedId, setSelectedId] = useState(null);
 
-  // Centralized filter state passed to grid
   const filters = useMemo(() => ({ query, tag: activeTag, year: activeYear }), [query, activeTag, activeYear]);
 
   return (
@@ -23,8 +24,12 @@ export default function App() {
           activeYear={activeYear}
           onYearChange={setActiveYear}
         />
-        <MovieGrid filters={filters} />
+        <MovieGrid filters={filters} onSelect={(id) => setSelectedId(id)} />
       </main>
+
+      {selectedId ? (
+        <MovieModal movieId={selectedId} onClose={() => setSelectedId(null)} />
+      ) : null}
     </div>
   );
 }
